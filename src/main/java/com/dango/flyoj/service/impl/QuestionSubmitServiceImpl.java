@@ -1,10 +1,22 @@
 package com.dango.flyoj.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.dango.flyoj.common.ErrorCode;
+import com.dango.flyoj.exception.BusinessException;
+import com.dango.flyoj.model.entity.Question;
 import com.dango.flyoj.model.entity.QuestionSubmit;
+import com.dango.flyoj.model.entity.QuestionSubmit;
+import com.dango.flyoj.model.entity.User;
+import com.dango.flyoj.service.QuestionService;
+import com.dango.flyoj.service.QuestionSubmitService;
 import com.dango.flyoj.service.QuestionSubmitService;
 import com.dango.flyoj.mapper.QuestionSubmitMapper;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 
 /**
 * @author tong
@@ -15,6 +27,78 @@ import org.springframework.stereotype.Service;
 public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper, QuestionSubmit>
     implements QuestionSubmitService{
 
+    @Resource
+    private QuestionService questionService;
+
+    /**
+     * 点赞
+     *
+     * @param questionId
+     * @param loginUser
+     * @return
+     */
+    @Override
+    public int doQuestionSubmit(long questionId, User loginUser) {
+        // 判断实体是否存在，根据类别获取实体
+        Question question = questionService.getById(questionId);
+        if (question == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        // 是否已点赞
+        long userId = loginUser.getId();
+        // 每个用户串行点赞
+        // 锁必须要包裹住事务方法
+        QuestionSubmitService questionSubmitService = (QuestionSubmitService) AopContext.currentProxy();
+        synchronized (String.valueOf(userId).intern()) {
+            return questionSubmitService.doQuestionSubmitInner(userId, questionId);
+        }
+    }
+
+    /**
+     * 封装了事务的方法
+     *
+     * @param userId
+     * @param questionId
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int doQuestionSubmitInner(long userId, long questionId) {
+        QuestionSubmit questionSubmit = new QuestionSubmit();
+        questionSubmit.setUserId(userId);
+        questionSubmit.setQuestionId(questionId);
+        QueryWrapper<QuestionSubmit> thumbQueryWrapper = new QueryWrapper<>(questionSubmit);
+        QuestionSubmit oldQuestionSubmit = this.getOne(thumbQueryWrapper);
+        boolean result;
+        // 已点赞
+        if (oldQuestionSubmit != null) {
+            result = this.remove(thumbQueryWrapper);
+            if (result) {
+                // 点赞数 - 1
+                result = questionService.update()
+                        .eq("id", questionId)
+                        .gt("thumbNum", 0)
+                        .setSql("thumbNum = thumbNum - 1")
+                        .update();
+                return result ? -1 : 0;
+            } else {
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR);
+            }
+        } else {
+            // 未点赞
+            result = this.save(questionSubmit);
+            if (result) {
+                // 点赞数 + 1
+                result = questionService.update()
+                        .eq("id", questionId)
+                        .setSql("thumbNum = thumbNum + 1")
+                        .update();
+                return result ? 1 : 0;
+            } else {
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR);
+            }
+        }
+    }
 }
 
 

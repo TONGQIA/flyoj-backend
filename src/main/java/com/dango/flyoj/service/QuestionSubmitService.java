@@ -2,6 +2,7 @@ package com.dango.flyoj.service;
 
 import com.dango.flyoj.model.entity.QuestionSubmit;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.dango.flyoj.model.entity.User;
 
 /**
 * @author tong
@@ -10,4 +11,21 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface QuestionSubmitService extends IService<QuestionSubmit> {
 
+    /**
+     * 提交
+     *
+     * @param questionId
+     * @param loginUser
+     * @return
+     */
+    int doQuestionSubmit(long questionId, User loginUser);
+
+    /**
+     * 帖子点赞（内部服务）
+     *
+     * @param userId
+     * @param questionId
+     * @return
+     */
+    int doQuestionSubmitInner(long userId, long questionId);
 }
