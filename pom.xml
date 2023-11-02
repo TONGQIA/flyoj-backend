@@ -9,7 +9,7 @@
         <version>2.7.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.dango</groupId>
+    <groupId>com.tong</groupId>
     <artifactId>flyoj-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>flyoj-backend</name>
