@@ -35,8 +35,6 @@ public class QuestionSubmitController {
     private UserService userService;
 
     /**
-     * 点赞 / 取消点赞
-     *
      * @param questionSubmitAddRequest
      * @param request
      * @return resultNum 提交题目
@@ -49,8 +47,8 @@ public class QuestionSubmitController {
         }
         // 登录才能提交
         final User loginUser = userService.getLoginUser(request);
-        long questionId = questionSubmitAddRequest.getQuestionId();
-        int result = questionSubmitService.doQuestionSubmit(questionId, loginUser);
+
+        int result = questionSubmitService.doQuestionSubmit(questionSubmitAddRequest, loginUser);
         return ResultUtils.success(result);
     }
 

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tong.flyoj.common.ErrorCode;
 import com.tong.flyoj.exception.BusinessException;
 import com.tong.flyoj.mapper.QuestionSubmitMapper;
+import com.tong.flyoj.model.dto.questionsubmit.QuestionSubmitAddRequest;
 import com.tong.flyoj.model.entity.Question;
 import com.tong.flyoj.model.entity.QuestionSubmit;
 import com.tong.flyoj.model.entity.User;
@@ -31,18 +32,20 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     /**
      * 点赞
      *
-     * @param questionId
+     * @param questionSubmitAddRequest
      * @param loginUser
      * @return
      */
     @Override
-    public int doQuestionSubmit(long questionId, User loginUser) {
+    public int doQuestionSubmit(QuestionSubmitAddRequest questionSubmitAddRequest, User loginUser) {
         // 判断实体是否存在，根据类别获取实体
+        Long questionId = questionSubmitAddRequest.getQuestionId();
+
         Question question = questionService.getById(questionId);
         if (question == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
-        // 是否已点赞
+        // 是否已提交题目
         long userId = loginUser.getId();
         // 每个用户串行点赞
         // 锁必须要包裹住事务方法
