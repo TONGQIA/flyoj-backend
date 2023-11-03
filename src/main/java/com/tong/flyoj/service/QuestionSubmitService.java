@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tong.flyoj.model.dto.question.QuestionQueryRequest;
 import com.tong.flyoj.model.dto.questionsubmit.QuestionSubmitAddRequest;
+import com.tong.flyoj.model.dto.questionsubmit.QuestionSubmitQueryRequest;
 import com.tong.flyoj.model.entity.Question;
 import com.tong.flyoj.model.entity.QuestionSubmit;
 import com.tong.flyoj.model.entity.User;
+import com.tong.flyoj.model.vo.QuestionSubmitVO;
 import com.tong.flyoj.model.vo.QuestionVO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,43 +28,35 @@ public interface QuestionSubmitService extends IService<QuestionSubmit> {
      * @param loginUser
      * @return
      */
-    int doQuestionSubmit(QuestionSubmitAddRequest questionSubmitAddRequest, User loginUser);
+    long doQuestionSubmit(QuestionSubmitAddRequest questionSubmitAddRequest, User loginUser);
 
-    /**
-     * 帖子点赞（内部服务）
-     *
-     * @param userId
-     * @param questionId
-     * @return
-     */
-    int doQuestionSubmitInner(long userId, long questionId);
 
 
     /**
      * 获取查询条件
      *
-     * @param questionSumbitQueryRequest
+     * @param questionSubmitQueryRequest
      * @return
      */
-    QueryWrapper<QuestionSumbit> getQueryWrapper(QuestionSumbitQueryRequest questionSumbitQueryRequest);
+    QueryWrapper<QuestionSubmit> getQueryWrapper(QuestionSubmitQueryRequest questionSubmitQueryRequest);
 
 
     /**
      * 获取帖子封装
      *
-     * @param questionSumbit
-     * @param request
+     * @param questionSubmit
+     * @param loginUser
      * @return
      */
-    QuestionSumbitVO getQuestionSumbitVO(QuestionSumbit questionSumbit, HttpServletRequest request);
+    QuestionSubmitVO getQuestionSubmitVO(QuestionSubmit questionSubmit, User loginUser);
 
     /**
      * 分页获取帖子封装
      *
-     * @param questionSumbitPage
-     * @param request
+     * @param questionSubmitPage
+     * @param loginUser
      * @return
      */
-    Page<QuestionSumbitVO> getQuestionSumbitVOPage(Page<QuestionSumbit> questionSumbitPage, HttpServletRequest request);
+    Page<QuestionSubmitVO> getQuestionSubmitVOPage(Page<QuestionSubmit> questionSubmitPage, User loginUser);
 
 }

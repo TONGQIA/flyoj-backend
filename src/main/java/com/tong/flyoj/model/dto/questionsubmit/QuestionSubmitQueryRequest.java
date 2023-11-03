@@ -1,6 +1,9 @@
 package com.tong.flyoj.model.dto.questionsubmit;
 
+import com.tong.flyoj.common.PageRequest;
+import com.tong.flyoj.model.entity.User;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
@@ -10,8 +13,9 @@ import java.io.Serializable;
  * @author tong
  * 
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class QuestionSubmitQueryRequest implements Serializable {
+public class QuestionSubmitQueryRequest extends PageRequest implements Serializable {
 
     /**
      * 编程语言
@@ -19,14 +23,19 @@ public class QuestionSubmitQueryRequest implements Serializable {
     private String language;
 
     /**
-     * 用户代码
+     * 题目提交状态
      */
-    private String code;
+    private Integer status;
 
     /**
      * 题目 id
      */
     private Long questionId;
+
+    /**
+     * 用户id
+     */
+    private Long userId;
 
     private static final long serialVersionUID = 1L;
 }
