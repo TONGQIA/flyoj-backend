@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tong.flyoj.common.ErrorCode;
 import com.tong.flyoj.constant.CommonConstant;
 import com.tong.flyoj.exception.BusinessException;
+import com.tong.flyoj.judge.JudgeService;
 import com.tong.flyoj.mapper.QuestionSubmitMapper;
 import com.tong.flyoj.model.dto.question.QuestionQueryRequest;
 import com.tong.flyoj.model.dto.questionsubmit.JudgeInfo;
@@ -28,6 +29,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.aop.framework.AopContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +40,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
@@ -53,6 +57,10 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
 
     @Resource
     private UserService userService;
+
+    @Resource
+    @Lazy
+    private JudgeService judgeService;
 
     /**
      * 点赞
@@ -90,7 +98,12 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         if (!save) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "数据插入失败");
         }
-        return questionSubmit.getId();
+        // 异步执行判题服务
+        Long questionSubmitId = questionSubmit.getId();
+        CompletableFuture.runAsync(()->{
+            judgeService.doJudge(questionSubmitId);
+        });
+        return questionSubmitId;
 
     }
 

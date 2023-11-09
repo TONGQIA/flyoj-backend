@@ -48,7 +48,7 @@ public class QuestionEditRequest implements Serializable {
     /**
      * 判题用例（json数组）
      */
-    private JudgeCase judgeCase;
+    private List<JudgeCase> judgeCase;
 
     /**
      * 判题配置（json对象）

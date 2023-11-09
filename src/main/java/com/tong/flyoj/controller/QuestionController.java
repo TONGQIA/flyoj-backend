@@ -67,7 +67,8 @@ public class QuestionController {
         List<String> tags = questionAddRequest.getTags();
         question.setTags(tags != null ? JSONUtil.toJsonStr(tags) : null);
 
-        JudgeCase judgeCase = questionAddRequest.getJudgeCase();
+        List<JudgeCase> judgeCase = questionAddRequest.getJudgeCase();
+
         question.setJudgeCase(judgeCase != null ? JSONUtil.toJsonStr(judgeCase):null);
 
         JudgeConfig judgeConfig = questionAddRequest.getJudgeConfig();
@@ -240,7 +241,7 @@ public class QuestionController {
         List<String> tags = questionEditRequest.getTags();
         question.setTags(tags != null ? JSONUtil.toJsonStr(tags) : null);
 
-        JudgeCase judgeCase = questionEditRequest.getJudgeCase();
+        List<JudgeCase> judgeCase = questionEditRequest.getJudgeCase();
         question.setJudgeCase(judgeCase != null ? JSONUtil.toJsonStr(judgeCase):null);
 
         JudgeConfig judgeConfig = questionEditRequest.getJudgeConfig();
