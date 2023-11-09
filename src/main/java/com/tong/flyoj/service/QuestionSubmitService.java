@@ -1,8 +1,18 @@
 package com.tong.flyoj.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.tong.flyoj.model.dto.question.QuestionQueryRequest;
+import com.tong.flyoj.model.dto.questionsubmit.QuestionSubmitAddRequest;
+import com.tong.flyoj.model.dto.questionsubmit.QuestionSubmitQueryRequest;
+import com.tong.flyoj.model.entity.Question;
 import com.tong.flyoj.model.entity.QuestionSubmit;
 import com.tong.flyoj.model.entity.User;
+import com.tong.flyoj.model.vo.QuestionSubmitVO;
+import com.tong.flyoj.model.vo.QuestionVO;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
 * @author tong
@@ -14,18 +24,39 @@ public interface QuestionSubmitService extends IService<QuestionSubmit> {
     /**
      * 提交
      *
-     * @param questionId
+     * @param questionSubmitAddRequest
      * @param loginUser
      * @return
      */
-    int doQuestionSubmit(long questionId, User loginUser);
+    long doQuestionSubmit(QuestionSubmitAddRequest questionSubmitAddRequest, User loginUser);
+
+
 
     /**
-     * 帖子点赞（内部服务）
+     * 获取查询条件
      *
-     * @param userId
-     * @param questionId
+     * @param questionSubmitQueryRequest
      * @return
      */
-    int doQuestionSubmitInner(long userId, long questionId);
+    QueryWrapper<QuestionSubmit> getQueryWrapper(QuestionSubmitQueryRequest questionSubmitQueryRequest);
+
+
+    /**
+     * 获取帖子封装
+     *
+     * @param questionSubmit
+     * @param loginUser
+     * @return
+     */
+    QuestionSubmitVO getQuestionSubmitVO(QuestionSubmit questionSubmit, User loginUser);
+
+    /**
+     * 分页获取帖子封装
+     *
+     * @param questionSubmitPage
+     * @param loginUser
+     * @return
+     */
+    Page<QuestionSubmitVO> getQuestionSubmitVOPage(Page<QuestionSubmit> questionSubmitPage, User loginUser);
+
 }

@@ -1,5 +1,6 @@
 package com.tong.flyoj.controller;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tong.flyoj.annotation.AuthCheck;
 import com.tong.flyoj.common.BaseResponse;
@@ -9,10 +10,8 @@ import com.tong.flyoj.common.ResultUtils;
 import com.tong.flyoj.constant.UserConstant;
 import com.tong.flyoj.exception.BusinessException;
 import com.tong.flyoj.exception.ThrowUtils;
-import com.tong.flyoj.model.dto.question.QuestionAddRequest;
-import com.tong.flyoj.model.dto.question.QuestionEditRequest;
-import com.tong.flyoj.model.dto.question.QuestionQueryRequest;
-import com.tong.flyoj.model.dto.question.QuestionUpdateRequest;
+import com.tong.flyoj.model.dto.question.*;
+import com.tong.flyoj.model.dto.user.UserQueryRequest;
 import com.tong.flyoj.model.entity.Question;
 import com.tong.flyoj.model.entity.User;
 import com.tong.flyoj.model.vo.QuestionVO;
@@ -31,7 +30,6 @@ import java.util.List;
  * 题目接口
  *
  * @author tong
- * 
  */
 @RestController
 @RequestMapping("/question")
@@ -57,15 +55,25 @@ public class QuestionController {
      */
     @PostMapping("/add")
     public BaseResponse<Long> addQuestion(@RequestBody QuestionAddRequest questionAddRequest, HttpServletRequest request) {
+        // 判空
         if (questionAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
+        // 1. 创建并复制到题目实体类中
         Question question = new Question();
         BeanUtils.copyProperties(questionAddRequest, question);
+        // TODO: 可以提取为方法，因为在这个页面 有三个地方用到
+        // 2. 特殊处理tags、judgeCase、judgeConfig
         List<String> tags = questionAddRequest.getTags();
-        if (tags != null) {
-            question.setTags(GSON.toJson(tags));
-        }
+        question.setTags(tags != null ? JSONUtil.toJsonStr(tags) : null);
+
+        List<JudgeCase> judgeCase = questionAddRequest.getJudgeCase();
+
+        question.setJudgeCase(judgeCase != null ? JSONUtil.toJsonStr(judgeCase):null);
+
+        JudgeConfig judgeConfig = questionAddRequest.getJudgeConfig();
+        question.setJudgeConfig(judgeConfig != null ? JSONUtil.toJsonStr(judgeConfig): null);
+
         questionService.validQuestion(question, true);
         User loginUser = userService.getLoginUser(request);
         question.setUserId(loginUser.getId());
@@ -116,10 +124,15 @@ public class QuestionController {
         }
         Question question = new Question();
         BeanUtils.copyProperties(questionUpdateRequest, question);
+        // 2. 特殊处理tags、judgeCase、judgeConfig
         List<String> tags = questionUpdateRequest.getTags();
-        if (tags != null) {
-            question.setTags(GSON.toJson(tags));
-        }
+        question.setTags(tags != null ? JSONUtil.toJsonStr(tags) : null);
+
+        JudgeCase judgeCase = questionUpdateRequest.getJudgeCase();
+        question.setJudgeCase(judgeCase != null ? JSONUtil.toJsonStr(judgeCase):null);
+
+        JudgeConfig judgeConfig = questionUpdateRequest.getJudgeConfig();
+        question.setJudgeConfig(judgeConfig != null ? JSONUtil.toJsonStr(judgeConfig): null);
         // 参数校验
         questionService.validQuestion(question, false);
         long id = questionUpdateRequest.getId();
@@ -157,7 +170,7 @@ public class QuestionController {
      */
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<QuestionVO>> listQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
-            HttpServletRequest request) {
+                                                               HttpServletRequest request) {
         long current = questionQueryRequest.getCurrent();
         long size = questionQueryRequest.getPageSize();
         // 限制爬虫
@@ -168,6 +181,25 @@ public class QuestionController {
     }
 
     /**
+     * 分页获取用户列表（仅管理员）
+     *
+     * @param questionQueryRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/list/page")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Page<Question>> listQuestionByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
+                                                   HttpServletRequest request) {
+        long current = questionQueryRequest.getCurrent();
+        long size = questionQueryRequest.getPageSize();
+        Page<Question> questionPage = questionService.page(new Page<>(current, size),
+                questionService.getQueryWrapper(questionQueryRequest));
+        return ResultUtils.success(questionPage);
+    }
+
+
+    /**
      * 分页获取当前用户创建的资源列表
      *
      * @param questionQueryRequest
@@ -176,7 +208,7 @@ public class QuestionController {
      */
     @PostMapping("/my/list/page/vo")
     public BaseResponse<Page<QuestionVO>> listMyQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
-            HttpServletRequest request) {
+                                                                 HttpServletRequest request) {
         if (questionQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -205,10 +237,15 @@ public class QuestionController {
         }
         Question question = new Question();
         BeanUtils.copyProperties(questionEditRequest, question);
+        // 2. 特殊处理tags、judgeCase、judgeConfig
         List<String> tags = questionEditRequest.getTags();
-        if (tags != null) {
-            question.setTags(GSON.toJson(tags));
-        }
+        question.setTags(tags != null ? JSONUtil.toJsonStr(tags) : null);
+
+        List<JudgeCase> judgeCase = questionEditRequest.getJudgeCase();
+        question.setJudgeCase(judgeCase != null ? JSONUtil.toJsonStr(judgeCase):null);
+
+        JudgeConfig judgeConfig = questionEditRequest.getJudgeConfig();
+        question.setJudgeConfig(judgeConfig != null ? JSONUtil.toJsonStr(judgeConfig): null);
         // 参数校验
         questionService.validQuestion(question, false);
         User loginUser = userService.getLoginUser(request);
