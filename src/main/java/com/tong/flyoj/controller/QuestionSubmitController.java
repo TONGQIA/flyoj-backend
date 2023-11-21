@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletRequest;
  * 
  */
 @RestController
-@RequestMapping("/questionsubmit")
+@RequestMapping("/question_submit")
 @Slf4j
 public class QuestionSubmitController {
 

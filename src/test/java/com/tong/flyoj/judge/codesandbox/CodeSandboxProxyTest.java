@@ -15,9 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class CodeSandboxProxyTest {
 
@@ -32,10 +30,6 @@ class CodeSandboxProxyTest {
         String code = "int main(){}";
         String language = QuestionSubmitLanguageEnum.JAVA.getValue();
         Question question = questionService.getById("1722554521034543105");
-        System.out.println(question.getJudgeCase());
-        String judgeCase = question.getJudgeCase();
-        List<JudgeCase> judgeCaseList = JSONUtil.toList(judgeCase, JudgeCase.class);
-        List<String> inputList = judgeCaseList.stream().map(JudgeCase::getInput).collect(Collectors.toList());
 
         List<String> list = Arrays.asList("1 2", "2 3");
 
