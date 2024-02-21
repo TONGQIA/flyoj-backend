@@ -1,13 +1,10 @@
 package com.tong.flyoj.judge.strategy;
 
-import cn.hutool.json.JSONUtil;
-import com.tong.flyoj.model.dto.question.JudgeCase;
 import com.tong.flyoj.model.dto.question.JudgeConfig;
-import com.tong.flyoj.model.dto.questionsubmit.JudgeInfo;
+import com.tong.flyoj.judge.codesandbox.model.JudgeInfo;
 import com.tong.flyoj.model.enums.JudgeInfoMessageEnum;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 默认判题策略

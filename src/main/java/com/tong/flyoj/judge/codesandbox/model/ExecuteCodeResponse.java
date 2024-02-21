@@ -1,9 +1,6 @@
 package com.tong.flyoj.judge.codesandbox.model;
 
 
-import com.tong.flyoj.model.dto.question.JudgeConfig;
-import com.tong.flyoj.model.dto.questionsubmit.JudgeInfo;
-import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

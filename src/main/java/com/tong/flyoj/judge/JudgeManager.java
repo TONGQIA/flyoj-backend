@@ -4,7 +4,7 @@ import com.tong.flyoj.judge.strategy.DefaultJudgeStrategyImpl;
 import com.tong.flyoj.judge.strategy.JavaLanguageJudgeStrategyImpl;
 import com.tong.flyoj.judge.strategy.JudgeContext;
 import com.tong.flyoj.judge.strategy.JudgeStrategy;
-import com.tong.flyoj.model.dto.questionsubmit.JudgeInfo;
+import com.tong.flyoj.judge.codesandbox.model.JudgeInfo;
 import com.tong.flyoj.model.entity.QuestionSubmit;
 import org.springframework.stereotype.Service;
 

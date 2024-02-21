@@ -1,5 +1,6 @@
 package com.tong.flyoj;
 
+import com.tong.flyoj.model.entity.User;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

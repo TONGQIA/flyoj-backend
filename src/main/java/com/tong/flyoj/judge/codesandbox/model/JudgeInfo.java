@@ -1,4 +1,4 @@
-package com.tong.flyoj.model.dto.questionsubmit;
+package com.tong.flyoj.judge.codesandbox.model;
 
 import lombok.Data;
 

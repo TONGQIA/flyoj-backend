@@ -2,7 +2,7 @@ package com.tong.flyoj.model.vo;
 
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.tong.flyoj.model.dto.questionsubmit.JudgeInfo;
+import com.tong.flyoj.judge.codesandbox.model.JudgeInfo;
 import com.tong.flyoj.model.entity.QuestionSubmit;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;

@@ -3,14 +3,9 @@ package com.tong.flyoj.judge.codesandbox.impl;
 import com.tong.flyoj.judge.codesandbox.CodeSandbox;
 import com.tong.flyoj.judge.codesandbox.model.ExecuteCodeRequest;
 import com.tong.flyoj.judge.codesandbox.model.ExecuteCodeResponse;
-import com.tong.flyoj.model.dto.questionsubmit.JudgeInfo;
+import com.tong.flyoj.judge.codesandbox.model.JudgeInfo;
 import com.tong.flyoj.model.enums.JudgeInfoMessageEnum;
 import com.tong.flyoj.model.enums.QuestionSubmitStatusEnum;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.apache.poi.ss.formula.udf.IndexedUDFFinder;
 
 import java.util.List;
 
