@@ -35,7 +35,7 @@ public class JavaLanguageJudgeStrategyImpl implements JudgeStrategy {
             return judgeInfoResponse;
         }
         // 3 依次判断每一项输出是否和用例输出结果一致
-        if (!outputListReal.stream().equals(outputListExpect)){
+        if (!outputListReal.equals(outputListExpect)){
             judgeInfoResponse.setMessage(JudgeInfoMessageEnum.WRONG_ANSWER.getValue());
             return judgeInfoResponse;
         }

@@ -67,7 +67,7 @@ public class JudgeServiceImpl implements JudgeService {
             throw new BusinessException(ErrorCode.OPERATION_ERROR,"题目状态更新错误");
         }
 
-        // 4. 存在就将执行的请求类需要的值加入：code、language、inputList
+        // 4. 存在就将执行的请求类需要的值加入：code、language、inputList，调用代码沙箱
         // 4.1 获取测试用例
         List<JudgeCase> judgeCaseList = JSONUtil.toList(question.getJudgeCase(), JudgeCase.class);
         List<String> inputList = judgeCaseList.stream().map(JudgeCase::getInput).collect(Collectors.toList());
@@ -78,6 +78,7 @@ public class JudgeServiceImpl implements JudgeService {
                 .inputList(inputList)
                 .build();
 
+        // 4.3 调用代码沙箱
         CodeSandbox codeSandbox = CodeSandboxFactory.newInstance(type);
         CodeSandboxProxy codeSandboxProxy = new CodeSandboxProxy(codeSandbox);
         ExecuteCodeResponse executeCodeResponse = codeSandboxProxy.executeCode(executeCodeRequest);

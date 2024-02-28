@@ -19,7 +19,7 @@ create table if not exists user
     userName     varchar(256)                           null comment '用户昵称',
     userAvatar   varchar(1024)                          null comment '用户头像',
     userProfile  varchar(512)                           null comment '用户简介',
-    userRole     varchar(256) default 'user'            not null comment '用户角色：user/admin/ban',
+    userRole     varchar(256) default 'student'            not null comment '用户角色：student/teacher/admin',
     createTime   datetime     default CURRENT_TIMESTAMP not null comment '创建时间',
     updateTime   datetime     default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     isDelete     tinyint      default 0                 not null comment '是否删除',
@@ -79,6 +79,19 @@ create table if not exists post
     isDelete   tinyint  default 0                 not null comment '是否删除',
     index idx_userId (userId)
 ) comment '帖子' collate = utf8mb4_unicode_ci;
+
+-- 帖子回复表
+create table if not exists post_reply
+(
+    id         bigint auto_increment comment 'id' primary key,
+    postId     bigint                             not null comment '帖子 id',
+    userId     bigint                             not null comment '回复用户 id',
+    content    text                               null comment '回复内容',
+    createTime datetime default CURRENT_TIMESTAMP not null comment '回复时间',
+    updateTime datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    index idx_postId (postId),
+    index idx_userId (userId)
+    ) comment '帖子回复' collate = utf8mb4_unicode_ci;
 
 -- 帖子点赞表（硬删除）
 create table if not exists post_thumb
